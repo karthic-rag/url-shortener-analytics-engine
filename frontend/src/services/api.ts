@@ -7,7 +7,7 @@ export interface ShortenRequest {
 
 export interface ShortenResponse {
   shortKey: string;
-  shortUrl: string;
+  fullShortUrl: string;
   originalUrl: string;
   anonymousToken: string;
   tokenIssued: boolean;
@@ -16,15 +16,35 @@ export interface ShortenResponse {
 export interface AnalyticsResponse {
   shortKey: string;
   totalClicks: number;
-  deviceMap: Record<string, number>;
-  referrerMap: Record<string, number>;
-  browserMap: Record<string, number>;
-  countryMap: Record<string, number>;
+  deviceBreakdown: Record<string, number>;
+  referrerBreakdown: Record<string, number>;
+  browserBreakdown: Record<string, number>;
+  countryBreakdown: Record<string, number>;
 }
+
+export interface UserLinkItem {
+  shortKey: string;
+  shortUrl: string;
+  clicks: number;
+}
+
+export const fetchUserLinks = async (): Promise<UserLinkItem[]> => {
+  const response = await api.get<UserLinkItem[]>("/analytics/my-links");
+  return response.data;
+};
+
+export const fetchAnalytics = async (shortKey: string): Promise<AnalyticsResponse> => {
+  const response = await api.get<AnalyticsResponse>(`/analytics/${shortKey}`);
+  return response.data;
+};
+
+export const deleteShortLink = async (shortKey: string): Promise<void> => {
+  await api.delete(`/delete/${shortKey}`);
+};
 
 // 2. Instantiate a central Axios client
 export const api = axios.create({
-  baseURL: "http://localhost:8080/api/v1",
+  baseURL: import.meta.env.VITE_API,
   headers: {
     "Content-Type": "application/json",
   },

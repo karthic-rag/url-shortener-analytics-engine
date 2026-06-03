@@ -55,7 +55,7 @@ public class UrlService {
         ShortenUrlResponse response = new ShortenUrlResponse();
         response.setAnonymousToken(anonymousToken);
         response.setOriginalUrl(longUrl);
-        response.setNewUser(isNewUser);
+        response.setTokenIssued(isNewUser);
 
         // BACKEND DOUBLE-SUBMIT CHECK
         String recentShortKey = redisTemplate.opsForValue().get(idempotencyKey);

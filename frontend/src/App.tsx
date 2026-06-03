@@ -17,7 +17,7 @@ export default function App() {
     <div className="min-h-screen flex flex-col">
       {/* Top Navigation Bar */}
       <nav className="border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-2 font-black text-xl tracking-tight bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+        <div className="flex items-center gap-2 font-black text-xl tracking-tight bg-linear-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
           <Link2 className="text-indigo-400 h-6 w-6" /> NexaLink Engine
         </div>
 

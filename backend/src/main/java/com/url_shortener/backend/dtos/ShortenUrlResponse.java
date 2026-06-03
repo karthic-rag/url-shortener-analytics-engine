@@ -12,5 +12,5 @@ public class ShortenUrlResponse {
     private String fullShortUrl;
     private String originalUrl;
     private String anonymousToken;
-    private boolean isNewUser;
+    private boolean tokenIssued;
 }
