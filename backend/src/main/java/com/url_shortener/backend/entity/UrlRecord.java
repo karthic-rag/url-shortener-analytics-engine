@@ -18,13 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 public class UrlRecord {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "url_seq_gen")
-    @SequenceGenerator(
-            name = "url_seq_gen",
-            sequenceName = "url_record_seq",
-            initialValue = 100000,
-            allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "long_url", nullable = false, columnDefinition = "TEXT")
