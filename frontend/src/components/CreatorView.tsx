@@ -44,7 +44,7 @@ export function CreatorView({ onLinkGenerated }: CreatorViewProps) {
   };
 
   return (
-    <div className="w-full max-w-xl mt-12 px-4 relative z-10 mx-auto">
+    <div className="w-full max-w-xl px-4 relative z-10 mx-auto my-8">
       {/* Decorative background glow */}
       <div className="absolute -inset-1 bg-linear-to-r from-indigo-500 to-purple-600 rounded-4xl blur-2xl opacity-20 -z-10 animate-pulse pointer-events-none" />
 
@@ -62,7 +62,7 @@ export function CreatorView({ onLinkGenerated }: CreatorViewProps) {
           </h2>
           <p className="text-sm text-slate-400 max-w-sm mx-auto leading-relaxed">
             Paste your long URL below. Our engine will compress it and generate
-            an anonymous token for advanced tracking.
+            advanced analytics for tracking.
           </p>
         </div>
 
