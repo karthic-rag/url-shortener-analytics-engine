@@ -20,36 +20,39 @@ A highly scalable, production-ready Full-Stack URL Shortener engineered to handl
 [ Phase 4: Full-Stack Dockerization     ] ──> SUCCESS
 ```
 
-* **Current State:** Fully functional, containerized full-stack web application ready for cloud deployment (e.g., Render, AWS, Railway).
-* **Frontend:** Type-safe React 19 + TypeScript SPA, leveraging React Compiler, TanStack Query for server-state cache management, and Tailwind CSS for styling.
-* **Backend:** Robust Spring Boot 4 engine with Redis multi-tier caching and MySQL persistent data layer.
+- **Current State:** Fully functional, containerized full-stack web application ready for cloud deployment (e.g., Render, AWS, Railway).
+- **Frontend:** Type-safe React 19 + TypeScript SPA, leveraging React Compiler, TanStack Query for server-state cache management, and Tailwind CSS for styling.
+- **Backend:** Robust Spring Boot 4 engine with Redis multi-tier caching and MySQL persistent data layer.
 
 ---
 
 ## 🚀 Key System Design & Optimization Choices
 
-* **Multi-Tier Caching ($O(1)$ Redirects):** Hot redirect routing requests are intercepted by an in-memory **Redis** cache layer for sub-millisecond response processing. On a cache miss, the system avoids expensive character-by-character string database index scans by mathematically decoding incoming Base62 keys back into native auto-incrementing integers, querying directly against MySQL's clustered primary key index.
-* **Constant-Space Analytics Summary ($O(1)$ Heap Memory):** Rather than loading thousands of raw click log objects into the Spring Boot JVM application memory, analytical transformations (device, browser, referrer, geolocation) are computed directly on the database engine using highly optimized **JPQL Group By** database queries. This drops server memory consumption from $O(\text{Clicks})$ to a constant $O(1)$ footprint.
-* **Cryptographic Identity Management:** Implements an unauthenticated session tracking layout using secure UUID structures (`X-Anonymous-User-ID`). This enables individual clients to retain exclusive ownership, dashboard analytics tracking rights, and secure multi-tier link deletions without traditional account creation barriers.
-* **Single Container Deployment:** The React SPA is statically built and embedded into the Spring Boot resource folder during the Docker multi-stage build, serving the entire application from a single optimized container for simplified deployment operations.
+- **Multi-Tier Caching ($O(1)$ Redirects):** Hot redirect routing requests are intercepted by an in-memory **Redis** cache layer for sub-millisecond response processing. On a cache miss, the system avoids expensive character-by-character string database index scans by mathematically decoding incoming Base62 keys back into native auto-incrementing integers, querying directly against MySQL's clustered primary key index.
+- **Constant-Space Analytics Summary ($O(1)$ Heap Memory):** Rather than loading thousands of raw click log objects into the Spring Boot JVM application memory, analytical transformations (device, browser, referrer, geolocation) are computed directly on the database engine using highly optimized **JPQL Group By** database queries. This drops server memory consumption from $O(\text{Clicks})$ to a constant $O(1)$ footprint.
+- **Cryptographic Identity Management:** Implements an unauthenticated session tracking layout using secure UUID structures (`X-Anonymous-User-ID`). This enables individual clients to retain exclusive ownership, dashboard analytics tracking rights, and secure multi-tier link deletions without traditional account creation barriers.
+- **Single Container Deployment:** The React SPA is statically built and embedded into the Spring Boot resource folder during the Docker multi-stage build, serving the entire application from a single optimized container for simplified deployment operations.
 
 ---
 
 ## 🛠️ Tech Stack & System Requirements
 
 ### Frontend
-* **Core:** React 19, TypeScript, Vite
-* **Styling:** Tailwind CSS v4, Lucide React (Icons)
-* **State & Data Fetching:** TanStack Query (React Query) v5, Axios
-* **Visualization:** Chart.js, React-Chartjs-2
+
+- **Core:** React 19, TypeScript, Vite
+- **Styling:** Tailwind CSS v4, Lucide React (Icons)
+- **State & Data Fetching:** TanStack Query (React Query) v5, Axios
+- **Visualization:** Chart.js, React-Chartjs-2
 
 ### Backend
-* **Core Engine:** Java 21, Spring Boot 4
-* **Data Layers:** MySQL (Persistent Storage), Redis (In-Memory Hot Caching)
-* **Build Automation:** Maven
+
+- **Core Engine:** Java 21, Spring Boot 4
+- **Data Layers:** MySQL (Persistent Storage), Redis (In-Memory Hot Caching)
+- **Build Automation:** Maven
 
 ### DevOps & Infra
-* **Containerization:** Docker (Multi-stage build)
+
+- **Containerization:** Docker (Multi-stage build)
 
 ---
 
@@ -58,15 +61,16 @@ A highly scalable, production-ready Full-Stack URL Shortener engineered to handl
 The backend provides a complete RESTful API that can be consumed by any external client.
 
 ### 1. Shorten a Destination URL
-* **Endpoint:** `POST /api/v1/shorten`
-* **Headers:** `X-Anonymous-User-ID: <UUID>` *(Optional: Server issues a tracking identity token if missing)*
-* **Request Body:**
+
+- **Endpoint:** `POST /api/v1/shorten`
+- **Headers:** `X-Anonymous-User-ID: <UUID>` _(Optional: Server issues a tracking identity token if missing)_
+- **Request Body:**
   ```json
   {
     "longUrl": "https://example.com/deep/path/to/resource?ref=portfolio"
   }
   ```
-* **Response Body (`201 Created`):**
+- **Response Body (`201 Created`):**
   ```json
   {
     "shortKey": "Aa5",
@@ -78,16 +82,18 @@ The backend provides a complete RESTful API that can be consumed by any external
   ```
 
 ### 2. High-Speed Link Redirection
-* **Endpoint:** `GET /{shortKey}` *(e.g., `GET /Aa5`)*
-* **Behavior:** Processes cache layers, records user-agent click metadata asynchronously, and issues a standard browser HTTP redirect.
-* **Response Headers:**
-  * `Status: 302 Found`
-  * `Location: https://example.com/deep/path/to/resource?ref=portfolio`
+
+- **Endpoint:** `GET /{shortKey}` _(e.g., `GET /Aa5`)_
+- **Behavior:** Processes cache layers, records user-agent click metadata asynchronously, and issues a standard browser HTTP redirect.
+- **Response Headers:**
+  - `Status: 302 Found`
+  - `Location: https://example.com/deep/path/to/resource?ref=portfolio`
 
 ### 3. Fetch Secured Ownership Analytics Dashboard Data
-* **Endpoint:** `GET /api/v1/analytics/{shortKey}`
-* **Headers:** `X-Anonymous-User-ID: 4a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d` *(Required: Enforces resource ownership bounds)*
-* **Response Body (`200 OK`):**
+
+- **Endpoint:** `GET /api/v1/analytics/{shortKey}`
+- **Headers:** `X-Anonymous-User-ID: 4a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d` _(Required: Enforces resource ownership bounds)_
+- **Response Body (`200 OK`):**
   ```json
   {
     "shortKey": "Aa5",
@@ -104,6 +110,7 @@ The backend provides a complete RESTful API that can be consumed by any external
 ## ⚡ Local Setup & Execution
 
 ### Option 1: Full-Stack Docker Build (Recommended)
+
 This method perfectly replicates the production deployment environment by building both the Vite frontend and Spring Boot backend into a single image.
 
 1. Ensure Docker is running on your machine.
@@ -122,21 +129,26 @@ This method perfectly replicates the production deployment environment by buildi
 ### Option 2: Local Development Mode (Split Services)
 
 #### 1. Configure Environment Variables
-Ensure your `backend/src/main/resources/application.properties` and `frontend/.env` point to your local MySQL and Redis instances.
+
+Ensure your `backend/src/main/resources/application.properties` and `frontend/.env`(rename .env.template to .env) point to your local MySQL and Redis instances.
 
 #### 2. Boot the Spring App Engine
+
 ```bash
 cd backend
 ./mvnw spring-boot:run
 ```
+
 The backend API will run on port `8080`.
 
 #### 3. Start the Vite React Frontend
+
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
+
 The frontend will start on the port specified by Vite (usually `5173`) and will proxy requests or point directly to the backend depending on your configuration. Access the UI via the local address provided in your terminal.
 
 ---
