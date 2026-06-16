@@ -2,6 +2,12 @@
 FROM node:20-alpine AS frontend-build
 WORKDIR /app/frontend
 
+# Build arguments for frontend
+ARG VITE_API
+
+#Arguments to environment variables
+ENV VITE_API=${VITE_API}
+
 # Copy frontend dependency files
 COPY frontend/package*.json ./
 
