@@ -28,20 +28,6 @@ export interface UserLinkItem {
   clicks: number;
 }
 
-export const fetchUserLinks = async (): Promise<UserLinkItem[]> => {
-  const response = await api.get<UserLinkItem[]>("/analytics/my-links");
-  return response.data;
-};
-
-export const fetchAnalytics = async (shortKey: string): Promise<AnalyticsResponse> => {
-  const response = await api.get<AnalyticsResponse>(`/analytics/${shortKey}`);
-  return response.data;
-};
-
-export const deleteShortLink = async (shortKey: string): Promise<void> => {
-  await api.delete(`/delete/${shortKey}`);
-};
-
 // 2. Instantiate a central Axios client
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API,
@@ -58,3 +44,19 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+export const fetchUserLinks = async (): Promise<UserLinkItem[]> => {
+  const response = await api.get<UserLinkItem[]>("/analytics/my-links");
+  return response.data;
+};
+
+export const fetchAnalytics = async (
+  shortKey: string,
+): Promise<AnalyticsResponse> => {
+  const response = await api.get<AnalyticsResponse>(`/analytics/${shortKey}`);
+  return response.data;
+};
+
+export const deleteShortLink = async (shortKey: string): Promise<void> => {
+  await api.delete(`/delete/${shortKey}`);
+};
